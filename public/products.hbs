@@ -1,0 +1,17 @@
+<div class="product-container">
+    <h1>Productos</h1>
+    <div class="col-title">
+        <span>Nombre</span>
+        <span>Precio</span>
+        <span>Imagen</span>
+    </div>
+    {{#each products}}
+        <div class="product-item">
+            <span class="product-title">{{this.title}}</span>
+            <span class="product-price">${{this.price}}</span>
+            <span class="product-image"><a href="{{this.thumbnail}}" target="_blank"><img src="{{this.thumbnail}}" alt="{{this.title}}"></a></span>
+        </div>
+    {{else}}
+        <h1 class="no-prod">No hay productos</h1>
+    {{/each}}
+</div>

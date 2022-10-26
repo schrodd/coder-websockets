@@ -1,0 +1,147 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Inter;
+}
+
+form#add-product-form {
+    width: min-content;
+    margin: 0 30px;
+    border-radius: 10px;
+    padding: 20px 30px;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+form#add-product-form * {
+    margin-bottom: 15px;
+}
+
+form#add-product-form input {
+    border: none;
+    border-radius: 5px 5px 0 0;
+    border-bottom: 1px solid grey;
+    min-width: 200px;
+    padding: 5px;
+}
+
+form#add-product-form button {
+    padding: 3px 10px;
+}
+
+.title {
+    padding: 30px;
+}
+.col-title {
+    width: 100%;
+    padding: 30px 0;
+    font-size: 20px;
+    font-weight: bold;
+    border-bottom: 1px solid rgb(230, 230, 230);
+}
+.col-title span {
+    flex-grow: 1;
+    width: 33%;
+    display: inline-block;
+    text-align: center;
+}
+.product-container {
+    padding: 30px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    justify-content: flex-start;
+}
+.product-item {
+    display: flex;
+    align-items: center;
+    width:100%;
+    padding: 10px;
+    border-bottom: 1px solid rgb(230, 230, 230);
+}
+.product-item:hover {
+    background-color: ghostwhite;
+}
+.product-item span {
+    flex-grow: 1;
+    width: 33%;
+    display: inline-block;
+    text-align: center;
+}
+.product-item span img {
+    border-radius: 3px;
+    max-width: 75px;
+    transition: all .2s ease-in-out;
+}
+.product-item span img:hover {
+    box-shadow: 0px 0px 15px rgba(0,0,0,.3);
+    transform: scale(1.1);
+}
+
+.no-prod {
+    margin-top: 50px;
+}
+div.chat {
+    background-color: ghostwhite;
+    border: 2px solid #333;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 0 30px;
+}
+div.chat div.msg-container {
+    overflow-y: scroll;
+    height: 350px;
+    padding: 20px;
+}
+form#msg-form {
+    align-self: stretch;
+    background-color: #333;
+    padding: 20px;
+    display: flex;
+}
+form#msg-form input {
+    background-color: ghostwhite;
+    flex-grow: 1;
+    border-radius: 5px 0 0 5px;
+    padding: 10px 15px;
+}
+form#msg-form button {
+    cursor: pointer;
+    padding: 10px 30px;
+    border-radius: 0 5px 5px 0;
+}
+form#msg-form input, form#msg-form button {
+    border: none;
+    border-bottom: 1px solid white;
+}
+div.chat div.msg-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+div.chat div.msg p.msg-text {
+    font-size: 14px;
+}
+div.chat div.msg {
+    background-color: rgb(228, 228, 228);
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px 15px;
+    min-width: 150px;
+    max-width: 800px;
+}
+div.chat div.msg.me {
+    background-color: rgb(223, 255, 235);
+    align-self: flex-end;
+}
+.timestamp, .user {
+    margin: 5px 0;
+    color: #333;
+    font-size: 10px;
+}
+.user {
+    font-weight: bold;
+}

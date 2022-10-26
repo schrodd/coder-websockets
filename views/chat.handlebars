@@ -1,0 +1,17 @@
+<div class="chat">
+  <div class="msg-container" >
+    {{#each msg}}
+      <div class="msg" user={{this.userId}}>
+        <p class="user">{{ this.userId }}</p>
+        <p class="msg-text">{{ this.content }}</p>
+        <p class="timestamp">Enviado: {{ this.time }}</p>
+      </div>
+    {{else}}
+      <p>No hay mensajes</p>
+    {{/each}}
+  </div>
+  <form id="msg-form">
+    <input type="text" name="msg" id="msg-input">
+    <button type="submit">Enviar</button>
+  </form>
+</div>

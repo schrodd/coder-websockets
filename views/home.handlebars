@@ -1,0 +1,26 @@
+<form action="/" method="post" id="add-product-form">
+    <p>Cargar producto</p>
+    <input type="text" name="title" id="title" placeholder="Producto">
+    <input type="text" name="price" id="price" placeholder="Precio">
+    <input type="text" name="thumbnail" id="thumbnail" placeholder="Link img">
+    <button type="submit">Enviar</button>
+</form>
+<div id="product-wrapper">
+    <div class="product-container">
+    <h1>Productos</h1>
+    <div class="col-title">
+        <span>Nombre</span>
+        <span>Precio</span>
+        <span>Imagen</span>
+    </div>
+    {{#each products}}
+        <div class="product-item">
+            <span class="product-title">{{this.title}}</span>
+            <span class="product-price">${{this.price}}</span>
+            <span class="product-image"><a href="{{this.thumbnail}}" target="_blank"><img src="{{this.thumbnail}}" alt="{{this.title}}"></a></span>
+        </div>
+    {{else}}
+        <h1 class="no-prod">No hay productos</h1>
+    {{/each}}
+    </div>
+</div>

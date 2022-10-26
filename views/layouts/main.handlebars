@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=PT+Mono&display=swap');</style>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="socket.io.js"></script> 
+    <script defer src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script defer src="script.js"></script>
+    <title>Handlebars + Express</title>
+</head>
+<body>
+    <div class="title">
+        <h1>Handlebars + Express</h1>
+        <div id="websocket" style="margin-bottom: 10px">
+            <h6>Estado del websocket: <span id="ws-status" style="color:red">desconectado</span></h6>
+        </div>
+        <nav>
+            <a href="/">Inicio</a>
+            <a href="/chat">Chat</a>
+        </nav>
+    </div>
+    {{{body}}}
+</body>
+</html>
