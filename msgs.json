@@ -1,1 +1,4 @@
-[{"id":1,"userId":"admin","content":"Probando","time":"10:19:23"},{"id":2,"userId":"noAdmin","content":"Probando 2","time":"10:20:51"},{"userId":"noAdmin","content":"a","time":"11:09:02","id":3},{"userId":"admin","content":"epa","time":"11:09:06","id":4},{"userId":"noAdmin","content":"qlq menor","time":"11:09:10","id":5}]
+[
+  { "id": 1, "userId": "admin@gmail.com", "content": "Probando", "time": "10:19:23" },
+  { "id": 2, "userId": "Invitado", "content": "Probando 2", "time": "10:20:51" }
+]

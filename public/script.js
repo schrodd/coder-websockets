@@ -1,6 +1,10 @@
 const socket = io()
 const statusContainer = document.querySelector('#ws-status')
-let user = prompt("Ingresá tu usuario:", "no-user")
+let user = ''
+
+if (window.location.pathname == '/chat'){
+  user = prompt("Ingresá tu email:", "no-user")
+}
 
 // Cambia el aspecto de los mensajes según el usuario
 function chatColor(){

@@ -1,1 +1,26 @@
-[{"title":"Hamburguesa de la casa","id":1,"price":"200","thumbnail":"https://cdn.lorem.space/images/burger/.cache/150x150/erik-odiin-F_xGk7V0Xbc-unsplash.jpg"},{"title":"Hamburguesa especial","id":2,"price":"300","thumbnail":"https://cdn.lorem.space/images/burger/.cache/150x150/thanos-pal-Djs02AtkOm4-unsplash.jpg"},{"title":"Hamburguesa King","id":3,"price":"500","thumbnail":"https://cdn.lorem.space/images/burger/.cache/150x150/amirali-mirhashemian-Tqr2yaJvksM-unsplash.jpg"},{"title":"Coso de la pizza","price":"10","thumbnail":"https://upload.wikimedia.org/wikipedia/commons/f/f9/Pizza_saver.JPG","id":4},{"title":"Link","price":"500","thumbnail":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9pSZb_NSN3rODnD0EFx3iQn8E9B2UZ7jH5wAlM1OSLg&s","id":5},{"title":"Link","price":"500","thumbnail":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9pSZb_NSN3rODnD0EFx3iQn8E9B2UZ7jH5wAlM1OSLg&s","id":6},{"title":"casc","price":"1512","thumbnail":"https://cdn.lorem.space/images/burger/.cache/150x150/thanos-pal-Djs02AtkOm4-unsplash.jpg","id":7},{"title":"1","price":"2","thumbnail":"3","id":8}]
+[
+  {
+    "title": "Hamburguesa de la casa",
+    "id": 1,
+    "price": "200",
+    "thumbnail": "https://cdn.lorem.space/images/burger/.cache/150x150/erik-odiin-F_xGk7V0Xbc-unsplash.jpg"
+  },
+  {
+    "title": "Hamburguesa especial",
+    "id": 2,
+    "price": "300",
+    "thumbnail": "https://cdn.lorem.space/images/burger/.cache/150x150/thanos-pal-Djs02AtkOm4-unsplash.jpg"
+  },
+  {
+    "title": "Hamburguesa King",
+    "id": 3,
+    "price": "500",
+    "thumbnail": "https://cdn.lorem.space/images/burger/.cache/150x150/amirali-mirhashemian-Tqr2yaJvksM-unsplash.jpg"
+  },
+  {
+    "title": "Coso de la pizza",
+    "price": "10",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Pizza_saver.JPG",
+    "id": 4
+  }
+]
