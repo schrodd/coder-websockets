@@ -1,48 +1,29 @@
-const fs = require('fs')
-const route = './msgs.json'
-const utf = 'utf-8'
+const { options } = require('./db/options.js')
+const knex = require('knex')(options)
 
 class Messages {
-  constructor (){
-    this.updateFromFile()
-  }
-  ///////////////////////////  ABAJO: NO USAR DESDE FUERA DE LA CLASE ////////////////////////////
-  updateFromFile = async () => {
-    try {
-      this.messages = JSON.parse(await fs.promises.readFile(route, utf))
-      return this.messages
-    }
-    catch (err) {console.log(err)}
-  }
-  saveToFile = async obj => {
-    try {
-        await fs.promises.writeFile(route, JSON.stringify(obj), utf)
-    }
-    catch (err) {console.log(err)}
-  }
-  ///////////////////////////  ARRIBA: NO USAR DESDE FUERA DE LA CLASE ////////////////////////////
-
   addMsg = async obj => {
-    await this.updateFromFile()
-    let id = 1
-    if (this.messages.length > 0){
-        id = this.messages.at(-1).id + 1
-    }
-    obj.id = id
-    this.messages.push(obj)
-    await this.saveToFile(this.messages)
-    console.log('Se ha guardado con éxito')
-    return this.messages
+    await knex('messages')
+      .insert(obj)
+      .then(() => console.log('Message submitted successfully'))
+      .catch(e => console.log(e))
   }
   getAll = async () => {
-    await this.updateFromFile()
-    return this.messages
-  }
-  deleteAll = async () => {
-    this.messages = []
-    await this.saveToFile(this.messages)
-    console.log('Se han borrado todos los objetos')
-    return null
+    const msgs = []
+    await knex('messages')
+      .then(rows => {
+        for (const row of rows) {
+          const msg = {
+            id: row['id'],
+            userId: row['userId'], 
+            content: row['content'],
+            time: row['time']
+          }
+          msgs.push(msg)
+        }
+      })
+      .catch(e => console.log(e))
+    return msgs
   }
 }
 

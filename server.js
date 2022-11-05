@@ -22,27 +22,28 @@ app.set('views', folderViews) // 2. Ubica carpeta de templates
 app.set('view engine', 'handlebars') // 3. Define el motor a usar
 
 httpServer.listen(port, () => console.log('Listening on port ' + port))
-app.get('/', (req, res) => {
-    res.render('home', { products: products.objects })
+app.get('/', async (req, res) => {
+    res.render('home', { products: await products.getAll() })
 })
-app.get('/chat', (req, res) => {
-    res.render('chat', { msg: msgs.messages })
+app.get('/chat', async (req, res) => {
+    res.render('chat', { msg: await msgs.getAll() })
 })
 
 //Websocket
 io.on('connection', socket => {
+    msgs.getAll()
     console.log('Usuario conectado')
     socket.emit('conectionSuccess', 'Se ha conectado con éxito')
     socket.on('productLoaded', async prod => {
         await products.addProduct(prod) 
-        products.getAll()
+        await products.getAll()
         .then(updatedProducts => {
             io.sockets.emit("productRefresh", updatedProducts)
         })
     })
     socket.on('msgSent', async msg => {
         await msgs.addMsg(msg) 
-        msgs.getAll()
+        await msgs.getAll()
         .then(updatedChat => {
             io.sockets.emit("chatRefresh", updatedChat)
         })
