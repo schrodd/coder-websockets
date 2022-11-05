@@ -1,5 +1,5 @@
-const { options } = require('./db/options.js')
-const knex = require('knex')(options)
+const { optionsMariaDB } = require('./db/options.js')
+const knex = require('knex')(optionsMariaDB)
 
 class Products {
   getAll = async () => {

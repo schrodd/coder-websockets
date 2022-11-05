@@ -1,5 +1,5 @@
-const { options } = require('./db/options.js')
-const knex = require('knex')(options)
+const { optionsSQLite } = require('./db/options.js')
+const knex = require('knex')(optionsSQLite)
 
 class Messages {
   addMsg = async obj => {

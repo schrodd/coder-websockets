@@ -1,4 +1,4 @@
-const options = {
+const optionsMariaDB = {
     client: 'mysql',
     connection: {
         host: '127.0.0.1',
@@ -8,5 +8,12 @@ const options = {
     },
     pool: { min: 0, max: 7 }
 }
+const optionsSQLite = {
+    client: 'sqlite3',
+    connection: {
+        filename: './msgs.sqlite'
+    },
+    useNullAsDefault: true
+}
 
-module.exports = { options }
+module.exports = { optionsMariaDB, optionsSQLite }

@@ -42,6 +42,7 @@ try {
 // Maneja el submit del chat
 try {
   const chatForm = document.querySelector('#msg-form')
+  const chatInput = document.querySelector('#msg-input')
   chatForm.addEventListener('submit', ev => {
     ev.preventDefault()
     const msg = {
@@ -50,6 +51,7 @@ try {
       time: new Date().toLocaleTimeString()
     }
     socket.emit('msgSent', msg)
+    chatInput.value = ''
   })
 } catch (error) {
   console.log(error)
