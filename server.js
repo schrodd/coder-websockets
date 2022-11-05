@@ -11,7 +11,7 @@ const products = new Products()
 const Messages = require('./msgs')
 const msgs = new Messages()
 const folderViews = path.join(__dirname, 'views') // Permite que la ruta sea estable si se ejecuta en otra pc
-const port = 8080 
+const port = 8080 // a
 
 app.use(express.json()) // Permite interpretar JSON como objetos
 app.use(express.urlencoded({extended: true})) // Permite interpretar URLs como objetos
