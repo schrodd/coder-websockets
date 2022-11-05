@@ -11,7 +11,7 @@ const optionsMariaDB = {
 const optionsSQLite = {
     client: 'sqlite3',
     connection: {
-        filename: './msgs.sqlite'
+        filename: './db/msgs.sqlite'
     },
     useNullAsDefault: true
 }
