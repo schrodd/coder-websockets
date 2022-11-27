@@ -1,8 +1,8 @@
 {{#each msg}}
-  <div class="msg" user={{this.userId}}>
-    <p class="user">{{ this.userId }}</p>
-    <p class="msg-text">{{ this.content }}</p>
-    <p class="timestamp">Enviado: {{ this.time }}</p>
+  <div class="msg" user={{this.author.id}}>
+    <p class="user">{{ this.author.id }}</p>
+    <p class="msg-text">{{ this.text }}</p>
+    <p class="timestamp">Enviado: {{ this.timestamp }}</p>
   </div>
 {{else}}
   <p>No hay mensajes</p>

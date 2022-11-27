@@ -1,29 +1,34 @@
-const { optionsSQLite } = require('./db/options.js')
-const knex = require('knex')(optionsSQLite)
+const fs = require('fs')
+const route = './db/msgs.json'
+const utf = 'utf-8'
+const { faker } = require("@faker-js/faker")
+const { datatype } = faker
 
 class Messages {
   addMsg = async obj => {
-    await knex('messages')
-      .insert(obj)
-      .then(() => console.log('Message submitted successfully'))
-      .catch(e => console.log(e))
+    const msgs = await this.getAll()
+    obj.id = datatype.uuid()
+    obj.timestamp = new Date(Date.now()).toLocaleString()
+    msgs.push(obj)
+    try {
+      await fs.promises.writeFile(route, JSON.stringify(msgs), utf)
+    }
+    catch (err) {
+        console.log(err)
+    }
+    console.log('Se ha guardado con éxito')
   }
   getAll = async () => {
-    const msgs = []
-    await knex('messages')
-      .then(rows => {
-        for (const row of rows) {
-          const msg = {
-            id: row['id'],
-            userId: row['userId'], 
-            content: row['content'],
-            time: row['time']
-          }
-          msgs.push(msg)
-        }
-      })
-      .catch(e => console.log(e))
+    const msgs = JSON.parse(await fs.promises.readFile(route, utf))
     return msgs
+  }
+  static async clean(){
+    try {
+      await fs.promises.writeFile(route, JSON.stringify([]), utf)
+    }
+    catch (err) {
+        console.log(err)
+    }
   }
 }
 

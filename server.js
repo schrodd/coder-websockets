@@ -28,6 +28,12 @@ app.get('/', async (req, res) => {
 app.get('/chat', async (req, res) => {
     res.render('chat', { msg: await msgs.getAll() })
 })
+app.get('/productos-test', async (req, res) => {
+    res.render('home', { products: await products.getRandom(5) })
+})
+app.get('/api/productos-test', async (req, res) => {
+    res.send(await products.getRandom(5))
+})
 
 //Websocket
 io.on('connection', socket => {

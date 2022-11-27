@@ -45,10 +45,21 @@ try {
   const chatInput = document.querySelector('#msg-input')
   chatForm.addEventListener('submit', ev => {
     ev.preventDefault()
-    const msg = {
+    /* const msg = {
       userId: user,
       content: chatForm[0].value,
       time: new Date().toLocaleTimeString()
+    } */
+    const msg = {
+      author: {
+        id: user,
+        nombre: '',
+        apellido: '',
+        edad: '',
+        alias: '',
+        avatar: ''
+      },
+      text: chatForm[0].value,
     }
     socket.emit('msgSent', msg)
     chatInput.value = ''
