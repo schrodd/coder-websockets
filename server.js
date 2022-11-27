@@ -12,11 +12,18 @@ const Messages = require('./msgs')
 const msgs = new Messages()
 const folderViews = path.join(__dirname, 'views') // Permite que la ruta sea estable si se ejecuta en otra pc
 const port = 8080 // a
+const { normalize, schema } = require('normalizr')
+const authorSchema = new schema.Entity('authors')
+const messageSchema = new schema.Entity('messages',{
+    author: authorSchema
+})
+const chatSchema = new schema.Entity('chat', {
+    messages: [messageSchema]
+})
 
 app.use(express.json()) // Permite interpretar JSON como objetos
 app.use(express.urlencoded({extended: true})) // Permite interpretar URLs como objetos
 app.use(express.static('./public')) // Sirve archivos estaticos
-
 app.engine('handlebars', handlebars.engine()) // 1. Define motor de plantillas
 app.set('views', folderViews) // 2. Ubica carpeta de templates
 app.set('view engine', 'handlebars') // 3. Define el motor a usar
@@ -26,7 +33,7 @@ app.get('/', async (req, res) => {
     res.render('home', { products: await products.getAll() })
 })
 app.get('/chat', async (req, res) => {
-    res.render('chat', { msg: await msgs.getAll() })
+    res.render('chat', { msg: await msgs.getMessagesOnly() })
 })
 app.get('/productos-test', async (req, res) => {
     res.render('home', { products: await products.getRandom(5) })
@@ -49,10 +56,9 @@ io.on('connection', socket => {
     })
     socket.on('msgSent', async msg => {
         await msgs.addMsg(msg) 
-        await msgs.getAll()
-        .then(updatedChat => {
-            io.sockets.emit("chatRefresh", updatedChat)
-        })
+        const newMsgs = await msgs.getAll()
+        const normalized = await normalize(newMsgs, chatSchema)
+        io.sockets.emit("chatRefresh", normalized)
     })
     
 })

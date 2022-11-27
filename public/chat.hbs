@@ -1,4 +1,5 @@
 {{#each msg}}
+  {{log this}}
   <div class="msg" user={{this.author.id}}>
     <p class="user">{{ this.author.id }}</p>
     <p class="msg-text">{{ this.text }}</p>

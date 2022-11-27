@@ -1,6 +1,12 @@
 const socket = io()
 const statusContainer = document.querySelector('#ws-status')
 let user = ''
+let normalizedSize = 0
+let denormalizedSize = 0
+
+function compressionSizeUpdate(){
+  document.querySelector('#msg-compression').innerHTML = denormalizedSize / normalizedSize
+}
 
 if (window.location.pathname == '/chat'){
   user = prompt("Ingresá tu email:", "no-user")
@@ -84,21 +90,35 @@ function hacerTabla(prod) {
       })
 }
 
+const authorSchema = new normalizr.schema.Entity('authors')
+const messageSchema = new normalizr.schema.Entity('messages',{
+    author: authorSchema
+})
+const chatSchema = new normalizr.schema.Entity('chat', {
+    messages: [messageSchema]
+})
+
 // Maneja la actualización del chat
-socket.on('chatRefresh', chat => {
-  hacerChat(chat).then(code => {
+socket.on('chatRefresh', async normalized => {
+  console.log(normalized)
+  //console.log(JSON.stringify(normalized).length())
+  const denorm = await normalizr.denormalize(normalized.result, chatSchema, normalized.entities)
+  console.log(denorm)
+  //console.log(JSON.stringify(denorm).length())
+  compressionSizeUpdate()
+  hacerChat(denorm.messages).then(code => {
     const e = document.querySelector('.msg-container')
     e.innerHTML = code
     chatColor()
     e.scrollTo(0, Number.MAX_SAFE_INTEGER)
   })
 })
-function hacerChat(chat) {
+function hacerChat(ch) {
   return fetch('/chat.hbs')
       .then(res => res.text())
       .then(msgs => {
           const template = Handlebars.compile(msgs);
-          const html = template({msg: chat})
+          const html = template({msg: ch})
           return html
       })
 }
