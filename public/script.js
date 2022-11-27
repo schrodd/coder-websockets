@@ -5,7 +5,8 @@ let normalizedSize = 0
 let denormalizedSize = 0
 
 function compressionSizeUpdate(){
-  document.querySelector('#msg-compression').innerHTML = denormalizedSize / normalizedSize
+  console.log(`Normalized: ${normalizedSize} | Denormalized: ${denormalizedSize}`)
+  document.querySelector('#msg-compression').innerHTML = `${Math.round(normalizedSize / denormalizedSize * 100)}%`
 }
 
 if (window.location.pathname == '/chat'){
@@ -100,11 +101,9 @@ const chatSchema = new normalizr.schema.Entity('chat', {
 
 // Maneja la actualización del chat
 socket.on('chatRefresh', async normalized => {
-  console.log(normalized)
-  //console.log(JSON.stringify(normalized).length())
+  normalizedSize = JSON.stringify(normalized).length
   const denorm = await normalizr.denormalize(normalized.result, chatSchema, normalized.entities)
-  console.log(denorm)
-  //console.log(JSON.stringify(denorm).length())
+  denormalizedSize = JSON.stringify(denorm).length
   compressionSizeUpdate()
   hacerChat(denorm.messages).then(code => {
     const e = document.querySelector('.msg-container')
