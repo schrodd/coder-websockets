@@ -16,7 +16,6 @@ class Messages {
     catch (err) {
         console.log(err)
     }
-    console.log('Se ha guardado con éxito')
   }
   getAll = async () => {
     try {

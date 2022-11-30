@@ -145,3 +145,27 @@ div.chat div.msg.me {
 .user {
     font-weight: bold;
 }
+form#login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #f1f1f1;
+    padding: 20px 0;
+    margin: 0 10px;
+    border-radius: 10px;
+    max-width: 300px;
+}
+form#login * {
+    margin-bottom: 10px;
+}
+
+form#login button {
+    padding: 5px 10px;
+}
+div.logout {
+    padding-left: 30px;
+}
+div.already-logged {
+    padding-left: 30px;
+}

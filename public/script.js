@@ -118,6 +118,6 @@ function hacerChat(ch) {
       .then(msgs => {
           const template = Handlebars.compile(msgs);
           const html = template({msg: ch})
-          return html
+          return html 
       })
 }

@@ -1,0 +1,9 @@
+<div class="logout">
+    <h3>¡Hasta luego {{loggedOutUser}}!</h3>
+    <p>Volverás a la página de inicio en unos segundos</p>
+</div>
+<script>
+    setTimeout(() => {
+        window.location.href = '/'
+    }, 5000)
+</script>

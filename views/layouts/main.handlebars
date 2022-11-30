@@ -16,12 +16,21 @@
     <div class="title">
         <h1>Handlebars + Express</h1>
         <div id="websocket" style="margin-bottom: 10px">
+            {{#if user}}
+                <h6>Bienvenido, {{user}}</h6>
+            {{/if}}
             <h6>Estado del websocket: <span id="ws-status" style="color:red">desconectado</span></h6>
             <h6>Compresión de mensajes: <span id="msg-compression"></span></h6>
         </div>
         <nav>
             <a href="/">Inicio</a>
             <a href="/chat">Chat</a>
+            {{#unless user}}
+                <a href="/login">Login</a>
+            {{/unless}}
+            {{#if user}}
+                <a href="/logout">Logout</a>
+            {{/if}}
         </nav>
     </div>
     {{{body}}}
