@@ -1,5 +1,5 @@
 const { optionsMariaDB } = require('./db/options.js')
-const knex = require('knex')(optionsMariaDB)
+const knex = require('knex')(optionsMariaDB) 
 const { faker } = require("@faker-js/faker")
 const { commerce, image, datatype } = faker
 faker.locale = 'es_MX'

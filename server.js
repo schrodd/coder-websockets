@@ -16,10 +16,77 @@ const { normalize, schema } = require('normalizr')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
+const mongoose = require('mongoose')
 const advancedOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }
+const mongoUrl = 'mongodb+srv://andres:coder@sessionmongoatlas.egjegti.mongodb.net/sessionMongoAtlas?retryWrites=true&w=majority'
+const {UserModel: User} = require('./users')
+const {Strategy: LocalStrategy} = require('passport-local')
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+const passport = require('passport')
+
+// Init mongoose
+mongoose.set('strictQuery', true)
+mongoose.connect(mongoUrl, advancedOptions, e => {
+    e && console.log('Hubo un error conectandose a la BDD')
+})
+
+// Config LocalStrategy (login)
+passport.use('login', new LocalStrategy(
+    //{passReqToCallback: true},
+    (username, password, done) => {
+        // Logica para encontrar usuario dentro de la bdd
+        User.findOne({ username }, async (err, user) => {
+            if (err)
+            return done(err);
+            if (!user) {
+            console.log('User Not Found with username ' + username);
+            return done(null, false, {message: 'No se ha encontrado el usuario'});
+            }
+            console.log(password)
+            console.log(user.password)
+            console.log(await bcrypt.compare(password, user.password))
+            if (! await bcrypt.compare(password, user.password)) {
+            console.log('Invalid Password');
+            return done(null, false, {message: 'Contraseña incorrecta'});
+            }
+            return done(null, user);
+        })           
+    }
+))
+
+// Config LocalStrategy (register)
+passport.use('signup', new LocalStrategy( // Configura la strategy 'local'
+    // {passReqToCallback: true}, // Permite acceder a la request desde el callback
+    ( /* req, */ username, password, done) => { 
+        // Logica para encontrar usuario dentro de la bdd
+        User.findOne({ username }, async (err, user) => { 
+            if (err) return done(err) 
+            if (user) return done(null, false) // Si existe lo retorna
+            if (!user) { // Si no existe lo crea
+                await bcrypt.hash(password, saltRounds, function(err, hash) {
+                    err && console.log(err)
+                    const newUser = {username, password: hash}
+                    User.create(newUser, (e, userCreated) => {
+                        err && console.log(err)
+                        return done(null, userCreated) // Devuelve el usuario recien creado
+                    })
+                });                
+                
+            }
+        })           
+    }
+))
+
+passport.serializeUser((user, done) => {
+    done(null, user._id);
+});
+passport.deserializeUser((id, done) => {
+    User.findById(id, done);
+})
 
 // Schemas de normalizr
 const authorSchema = new schema.Entity('authors')
@@ -36,7 +103,7 @@ app.use(express.urlencoded({extended: true})) // Permite interpretar URLs como o
 app.use(express.static('./public')) // Sirve archivos estaticos
 app.use(session({ 
     store: MongoStore.create({
-        mongoUrl: 'mongodb+srv://andres:coder@sessionmongoatlas.egjegti.mongodb.net/sessionMongoAtlas?retryWrites=true&w=majority',
+        mongoUrl: mongoUrl,
         mongoOptions: advancedOptions
     }),
     secret: 'clave',
@@ -47,31 +114,43 @@ app.use(session({
         maxAge: 600000 // 10 min.
     }
 }))
+// Init passport
+app.use(passport.initialize()) // conectamos passport con express
+app.use(passport.session()) // conectamos passport y las sesiones
 app.engine('handlebars', handlebars.engine()) // 1. Define motor de plantillas
 app.set('views', folderViews) // 2. Ubica carpeta de templates
 app.set('view engine', 'handlebars') // 3. Define el motor a usar
 
 const verifyLogin = (req, res, next) => {
-    if (req.session.usuario) {
+    if (req.isAuthenticated()) {
         next()
     } else {
-        res.redirect('/login')
+        res.redirect('/welcome')
     }
 }
 
 httpServer.listen(port, () => console.log('Listening on port ' + port))
-
+app.get('/welcome', async (req, res) => {
+    res.render('welcome')
+})
 app.get('/', verifyLogin, async (req, res) => {
-    res.render('home', { products: await products.getAll(), user: req.session.usuario })
+    res.render('home', { products: await products.getAll(), user: req.user.username })
 })
 app.get('/login', (req, res) => {
-    if (req.session.usuario) res.render('alreadylogged', {user: req.session.usuario})
+    if (req.user) res.render('alreadylogged', {user: req.user.username})
     else res.render('login')
 })
-app.get('/loginform', (req, res) => {
-    try {
+app.get('/login-failed', (req, res) => {
+    res.render('loginfailed', {message: req.session.messages.at(-1)})
+})
+app.post('/login',passport.authenticate('login', {
+    failureRedirect: '/login-failed',
+    failureMessage: true
+}),(req, res) => {
+    res.redirect('/')
+    /* try {
         if (!req.session.usuario) {
-            req.session.usuario = req.query.usuario
+            req.session.usuario = req.body.username
         }
     } catch (error) {
         console.log(e)
@@ -79,21 +158,34 @@ app.get('/loginform', (req, res) => {
     if (req.session.usuario) {
         res.redirect('/')
     } 
-    else res.redirect('/login')
+    else res.redirect('/login') */
 })
 app.get('/logout', verifyLogin, (req, res) => {
-    const user = req.session.usuario
+    const user = req.user.username
     req.session.destroy(e => console.log(e))
     res.render('bye', {loggedOutUser: user})
 })
 app.get('/chat', verifyLogin, async (req, res) => {
-    res.render('chat', { msg: await msgs.getMessagesOnly(), user: req.session.usuario })
+    res.render('chat', { msg: await msgs.getMessagesOnly(), user: req.user.username })
 })
 app.get('/productos-test', verifyLogin, async (req, res) => {
-    res.render('home', { products: await products.getRandom(5), user: req.session.usuario })
+    res.render('home', { products: await products.getRandom(5), user: req.user.username })
 })
 app.get('/api/productos-test', async (req, res) => {
     res.send(await products.getRandom(5))
+})
+app.get('/register', (req, res) => {
+    if (req.user) res.render('alreadylogged', {user: req.user.username})
+    else res.render('register')
+})
+app.get('/register-failed', (req, res) => {
+    res.render('registerfailed')
+})
+app.post('/register', passport.authenticate('signup', {
+    failureRedirect: '/register-failed',
+    failureMessage: true
+}), (req, res) => {
+    res.redirect('/')
 })
 
 //Websocket
