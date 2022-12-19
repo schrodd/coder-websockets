@@ -169,3 +169,9 @@ div.logout {
 div.action-failed {
     padding-left: 30px;
 }
+div.info {
+    padding-left: 30px;
+}
+div.info .item {
+    margin-bottom: 15px;
+}

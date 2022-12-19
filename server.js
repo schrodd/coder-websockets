@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+require('dotenv').config()
 const { Server: HTTPServer } = require('http')
 const httpServer = new HTTPServer(app)
 const { Server: IOServer } = require('socket.io')
@@ -11,7 +12,9 @@ const products = new Products()
 const Messages = require('./msgs')
 const msgs = new Messages()
 const folderViews = path.join(__dirname, 'views') // Permite que la ruta sea estable si se ejecuta en otra pc
-const port = 8080 // a
+const yargs = require('yargs/yargs')(process.argv.slice(2))
+const args = yargs.argv
+const port = args.port // a
 const { normalize, schema } = require('normalizr')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
@@ -21,12 +24,23 @@ const advancedOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }
-const mongoUrl = 'mongodb+srv://andres:coder@sessionmongoatlas.egjegti.mongodb.net/sessionMongoAtlas?retryWrites=true&w=majority'
+const mongoUrl = process.env.MONGOURL || 'mongodb+srv://andres:coder@sessionmongoatlas.egjegti.mongodb.net/sessionMongoAtlas?retryWrites=true&w=majority'
 const {UserModel: User} = require('./users')
 const {Strategy: LocalStrategy} = require('passport-local')
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const passport = require('passport')
+
+// Setup info obj for get /info
+const info = {
+    args: JSON.stringify(args),
+    so: process.platform,
+    nodever: process.version,
+    rss: process.memoryUsage().rss,
+    path: process.execPath,
+    pid: process.pid,
+    projectfolder: process.cwd()
+}
 
 // Init mongoose
 mongoose.set('strictQuery', true)
@@ -130,6 +144,9 @@ const verifyLogin = (req, res, next) => {
 }
 
 httpServer.listen(port, () => console.log('Listening on port ' + port))
+app.get('/info', (req, res) => {
+    res.render('info', info)
+})
 app.get('/welcome', async (req, res) => {
     res.render('welcome')
 })
@@ -148,17 +165,6 @@ app.post('/login',passport.authenticate('login', {
     failureMessage: true
 }),(req, res) => {
     res.redirect('/')
-    /* try {
-        if (!req.session.usuario) {
-            req.session.usuario = req.body.username
-        }
-    } catch (error) {
-        console.log(e)
-    }
-    if (req.session.usuario) {
-        res.redirect('/')
-    } 
-    else res.redirect('/login') */
 })
 app.get('/logout', verifyLogin, (req, res) => {
     const user = req.user.username
