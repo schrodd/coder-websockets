@@ -30,6 +30,7 @@ const {Strategy: LocalStrategy} = require('passport-local')
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const passport = require('passport')
+const { fork } = require('child_process')
 
 // Setup info obj for get /info
 const info = {
@@ -192,6 +193,17 @@ app.post('/register', passport.authenticate('signup', {
     failureMessage: true
 }), (req, res) => {
     res.redirect('/')
+})
+app.get('/api/randoms', (req, res) => {
+    const childProcess = fork('./childProcess.js')
+    if (req.query.cant) {
+        childProcess.send(req.query.cant)
+    } else {
+        childProcess.send(1000)
+    }
+    childProcess.on('message', msj => {
+        res.send(msj)
+    })
 })
 
 //Websocket
