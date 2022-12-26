@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js --port 3000",
-    "dev": "nodemon server.js --port 8080",
+    "start": "node server.js --port 3000 --mode CLUSTER",
+    "dev": "nodemon server.js --port 8080 --mode CLUSTER",
     "init-db": "node ./db/create_tables.js",
     "seed": "node ./db/populate.js",
     "clean": "node ./db/clean_tables.js"

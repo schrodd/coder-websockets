@@ -14,7 +14,10 @@ const msgs = new Messages()
 const folderViews = path.join(__dirname, 'views') // Permite que la ruta sea estable si se ejecuta en otra pc
 const yargs = require('yargs/yargs')(process.argv.slice(2))
 const args = yargs.argv
-const port = args.port // a
+const port = args.port || 8080
+const mode = args.mode == 'FORK' || 'CLUSTER' ? args.mode : 'FORK' // Fork mode by def
+const cluster = require('cluster')
+const numCpus = require('os').cpus().length
 const { normalize, schema } = require('normalizr')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
@@ -32,6 +35,20 @@ const saltRounds = 10;
 const passport = require('passport')
 const { fork } = require('child_process')
 
+// Setup de Cluster
+if (cluster.isMaster && mode == 'CLUSTER') {
+    console.log(`Master ${process.pid} is running`)
+    for (let i = 0; i < numCpus; i++){
+        cluster.fork()
+    }
+    cluster.on('exit', (worker, code, signal) => {
+        console.log(`Worker ${worker.process.pid} died`)
+        cluster.fork()
+    })
+} else {
+    httpServer.listen(port, () => console.log(`Listening on port ${port} | PID: ${process.pid}`))
+}
+
 // Setup info obj for get /info
 const info = {
     args: JSON.stringify(args),
@@ -40,7 +57,8 @@ const info = {
     rss: process.memoryUsage().rss,
     path: process.execPath,
     pid: process.pid,
-    projectfolder: process.cwd()
+    projectfolder: process.cwd(),
+    processors: numCpus
 }
 
 // Init mongoose
@@ -115,7 +133,7 @@ const chatSchema = new schema.Entity('chat', {
 app.use(express.json()) // Permite interpretar JSON como objetos
 app.use(cookieParser()) // Permite manejar Cookies
 app.use(express.urlencoded({extended: true})) // Permite interpretar URLs como objetos
-app.use(express.static('./public')) // Sirve archivos estaticos
+// app.use(express.static('./public')) // Sirve archivos estaticos
 app.use(session({ 
     store: MongoStore.create({
         mongoUrl: mongoUrl,
@@ -144,7 +162,7 @@ const verifyLogin = (req, res, next) => {
     }
 }
 
-httpServer.listen(port, () => console.log('Listening on port ' + port))
+// httpServer.listen(port, () => console.log('Listening on port ' + port))
 app.get('/info', (req, res) => {
     res.render('info', info)
 })
